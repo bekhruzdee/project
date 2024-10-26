@@ -6,6 +6,7 @@ import { CreateUserDto } from './dto/create-user.dto'; // Foydalanuvchini yarati
 import { UpdateUserDto } from './dto/update-user.dto'; // Foydalanuvchini yangilash DTO
 import { CreateAdminDto } from './dto/create-admin.dto'; // Admin yaratish DTO
 import * as bcrypt from 'bcrypt';
+import { RolesGuard } from 'src/auth/role.guard';
 
 @Injectable()
 export class UsersService {
@@ -14,33 +15,10 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  // Yangi foydalanuvchini yaratish
-  async create(
-    createUserDto: CreateUserDto,
-  ): Promise<{ success: boolean; message: string; data?: User }> {
-    const existingUser = await this.usersRepository.findOne({
-      where: { email: createUserDto.email },
-    });
-
-    if (existingUser) {
-      return {
-        success: false,
-        message: 'User already exists',
-      };
-    }
-
-    const newUser = this.usersRepository.create(createUserDto);
-    const savedUser = await this.usersRepository.save(newUser);
-
-    return {
-      success: true,
-      message: 'User created successfully',
-      data: savedUser,
-    };
-  }
-
   // Adminni yaratish
-  async createAdmin(createAdminDto: CreateAdminDto): Promise<{ success: boolean; message: string; data?: User }> {
+  async createAdmin(
+    createAdminDto: CreateAdminDto,
+  ): Promise<{ success: boolean; message: string; data?: User }> {
     const existingUser = await this.usersRepository.findOne({
       where: { email: createAdminDto.email },
     });
@@ -54,7 +32,7 @@ export class UsersService {
 
     // Parolni hashlab saqlash
     const hashedPassword = await bcrypt.hash(createAdminDto.password, 10);
-    
+
     const newAdmin = this.usersRepository.create({
       ...createAdminDto,
       password: hashedPassword, // Hashed parolni qo'shamiz
@@ -68,7 +46,6 @@ export class UsersService {
       data: savedAdmin,
     };
   }
-
 
   // Barcha foydalanuvchilarni olish
   async findAll(): Promise<{
@@ -140,20 +117,5 @@ export class UsersService {
       success: true,
       message: 'User deleted successfully',
     };
-  }
-
-  // Foydalanuvchini yaratish yoki yangilash
-  async createOrUpdate(profile: any): Promise<User> {
-    const { username, emails } = profile;
-    const email = emails[0].value;
-
-    let user = await this.usersRepository.findOne({ where: { email } });
-
-    if (!user) {
-      user = this.usersRepository.create({ username, email });
-      await this.usersRepository.save(user);
-    }
-
-    return user;
   }
 }

@@ -6,6 +6,8 @@ import { UserModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/entities/user.entity';
 import { ConfigModule } from '@nestjs/config';
+import { CoursesModule } from './courses/courses.module';
+import { Course } from './courses/entities/course.entity';
 
 @Module({
   imports: [
@@ -17,12 +19,13 @@ import { ConfigModule } from '@nestjs/config';
       username: process.env.DB_USERNAME, 
       password: process.env.DB_PASSWORD, 
       database: process.env.DB_DATABASE, 
-      entities: [User],
+      entities: [User, Course],
       synchronize: true,
       // logging: true,
     }),
     AuthModule,
     UserModule,
+    CoursesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
