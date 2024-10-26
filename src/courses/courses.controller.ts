@@ -33,16 +33,17 @@ export class CoursesController {
     return courses.length > 0 ? courses : [];
   }
 
-  // @Get(':id')
-  // async findOne(@Param('id') id: number): Promise<Course> {
-  //   return this.coursesService.findOne(+id);
-  // }
-
   @Get('find')
-async findByName(@Query('name') name: string) {
+  async findByName(@Query('name') name: string) {
     return this.coursesService.findByName(name);
-}
+  }
 
+  @Get('category/:category')
+  async getCoursesByCategory(
+    @Param('category') category: string,
+  ): Promise<Course[]> {
+    return this.coursesService.findByCategory(category);
+  }
 
   @UseGuards(AuthGuard, RolesGuard)
   @Patch(':id')

@@ -22,33 +22,30 @@ export class CoursesService {
     return this.courseRepository.find();
   }
 
-  // async findOne(id: number): Promise<Course> {
-  //   const course = await this.courseRepository.findOneBy({ id });
-  //   if (!course) {
-  //     throw new NotFoundException(`Course with id ${id} not found`);
-  //   }
-  //   return course;
-  // }
-
-  async findByName(name: string): Promise<{ message: string; courses?: Course[] }> {
+  async findByName(
+    name: string,
+  ): Promise<{ message: string; courses?: Course[] }> {
     const courses = await this.courseRepository
-        .createQueryBuilder('course')
-        .where('course.name ILIKE :name', { name: `%${name}%` }) // ILIKE case-insensitive qidirish
-        .getMany();
+      .createQueryBuilder('course')
+      .where('course.name ILIKE :name', { name: `%${name}%` }) // ILIKE case-insensitive qidirish
+      .getMany();
 
     if (courses.length === 0) {
-        return {
-            message: 'Course not found', // Kurs topilmasa xabar
-        };
+      return {
+        message: 'Course not found', // Kurs topilmasa xabar
+      };
     }
 
     return {
-        message: 'Courses found',
-        courses,
+      message: 'Courses found',
+      courses,
     };
+  }
 
-}
-
+  // CourseService
+  async findByCategory(category: string): Promise<Course[]> {
+    return this.courseRepository.find({ where: { category } });
+  }
 
   async update(id: number, updateCourseDto: UpdateCourseDto): Promise<Course> {
     const course = await this.courseRepository.preload({
@@ -68,5 +65,4 @@ export class CoursesService {
     }
     return `Course with id ${id} has been successfully deleted`;
   }
-  
 }

@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Enrollment } from 'src/enrollment/entities/enrollment.entity';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 
 @Entity('courses')
 export class Course {
@@ -28,4 +29,7 @@ export class Course {
 
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
+
+  @OneToMany(() => Enrollment, (enrollment) => enrollment.course) // Course va Enrollment o'rtasidagi ulanish
+  enrollments: Enrollment[];
 }
