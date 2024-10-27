@@ -11,6 +11,29 @@ export class EnrollmentService {
   ) {}
 
   async enrollUser(userId: number, courseId: number): Promise<Enrollment> {
+    const [userExists, courseExists] = await Promise.all([
+      this.enrollmentRepository
+        .createQueryBuilder('enrollment')
+        .innerJoinAndSelect('enrollment.user', 'user')
+        .where('user.id = :userId', { userId })
+        .getOne(),
+      this.enrollmentRepository
+        .createQueryBuilder('enrollment')
+        .innerJoinAndSelect('enrollment.course', 'course')
+        .where('course.id = :courseId', { courseId })
+        .getOne(),
+    ]);
+
+    if (!userExists && !courseExists) {
+      throw new NotFoundException('Course and User Not Found');
+    }
+    if (!userExists) {
+      throw new NotFoundException('User Not Found');
+    }
+    if (!courseExists) {
+      throw new NotFoundException('Course Not Found');
+    }
+
     const enrollment = this.enrollmentRepository.create({
       user: { id: userId },
       course: { id: courseId },
@@ -18,7 +41,6 @@ export class EnrollmentService {
     return this.enrollmentRepository.save(enrollment);
   }
 
-  // Foydalanuvchi tomonidan yozilgan kurslarni olish
   async getEnrollmentsByUserId(userId: number): Promise<Enrollment[]> {
     const enrollments = await this.enrollmentRepository.find({
       where: { user: { id: userId } },
@@ -26,7 +48,9 @@ export class EnrollmentService {
     });
 
     if (enrollments.length === 0) {
-      throw new NotFoundException(`No enrollments found for user with ID ${userId}.`);
+      throw new NotFoundException(
+        `No enrollments found for user with ID ${userId}.`,
+      );
     }
 
     return enrollments;
@@ -39,7 +63,9 @@ export class EnrollmentService {
     });
 
     if (enrollments.length === 0) {
-      throw new NotFoundException(`No enrollments found for course with ID ${courseId}.`);
+      throw new NotFoundException(
+        `No enrollments found for course with ID ${courseId}.`,
+      );
     }
 
     return enrollments;

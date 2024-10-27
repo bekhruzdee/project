@@ -10,6 +10,10 @@ import { CoursesModule } from './courses/courses.module';
 import { Course } from './courses/entities/course.entity';
 import { EnrollmentModule } from './enrollment/enrollment.module';
 import { Enrollment } from './enrollment/entities/enrollment.entity';
+import { LessonsModule } from './lessons/lessons.module';
+import { Lesson } from './lessons/entities/lesson.entity';
+import { ModulesModule } from './modules/modules.module';
+import { Modules } from './modules/entities/module.entity';
 
 @Module({
   imports: [
@@ -21,7 +25,7 @@ import { Enrollment } from './enrollment/entities/enrollment.entity';
       username: process.env.DB_USERNAME, 
       password: process.env.DB_PASSWORD, 
       database: process.env.DB_DATABASE, 
-      entities: [User, Course, Enrollment],
+      entities: [User, Course, Enrollment, Lesson, Modules],
       synchronize: true,
       // logging: true,
     }),
@@ -29,6 +33,8 @@ import { Enrollment } from './enrollment/entities/enrollment.entity';
     UserModule,
     CoursesModule,
     EnrollmentModule,
+    LessonsModule,
+    ModulesModule
   ],
   controllers: [AppController],
   providers: [AppService],

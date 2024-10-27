@@ -1,4 +1,5 @@
 import { Enrollment } from 'src/enrollment/entities/enrollment.entity';
+import { Modules } from 'src/modules/entities/module.entity';
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 
 @Entity('courses')
@@ -32,4 +33,7 @@ export class Course {
 
   @OneToMany(() => Enrollment, (enrollment) => enrollment.course) // Course va Enrollment o'rtasidagi ulanish
   enrollments: Enrollment[];
+
+  @OneToMany(() => Modules, (module) => module.course)
+  modules: Modules[];
 }

@@ -4,12 +4,15 @@ import { Repository } from 'typeorm';
 import { Course } from './entities/course.entity';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
+import { Modules } from 'src/modules/entities/module.entity';
 
 @Injectable()
 export class CoursesService {
   constructor(
     @InjectRepository(Course)
     private readonly courseRepository: Repository<Course>,
+    @InjectRepository(Modules)
+    private readonly moduleRepository: Repository<Modules>,
   ) {}
 
   async create(createCourseDto: CreateCourseDto): Promise<Course> {
@@ -45,6 +48,19 @@ export class CoursesService {
   // CourseService
   async findByCategory(category: string): Promise<Course[]> {
     return this.courseRepository.find({ where: { category } });
+  }
+
+  async getModulesByCourseId(courseId: number): Promise<Modules[]> {
+    const course = await this.courseRepository.findOne({
+      where: { id: courseId },
+      relations: ['modules'], // Kursga bog'liq modullarni olish
+    });
+    
+    if (!course) {
+      throw new NotFoundException('Course not found');
+    }
+
+    return course.modules; // Kursga bog'liq modullarni qaytarish
   }
 
   async update(id: number, updateCourseDto: UpdateCourseDto): Promise<Course> {
