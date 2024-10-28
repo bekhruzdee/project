@@ -29,14 +29,14 @@ export class ModulesService {
   async getAllModules(courseId: number): Promise<Modules[]> {
     const course = await this.courseRepository.findOne({
       where: { id: courseId },
-      relations: ['modules'],
+      relations: ['modules'], // Kurs bilan bog'langan modullarni olish
     });
 
     if (!course) {
       throw new NotFoundException('Course not found');
     }
 
-    return course.modules; 
+    return course.modules; // Modullarni qaytarish
   }
 
   async updateModule(id: number, name: string): Promise<Modules> {
@@ -47,8 +47,8 @@ export class ModulesService {
       throw new NotFoundException('Module not found');
     }
 
-    module.name = name; 
-    return this.moduleRepository.save(module); 
+    module.name = name; // Modul nomini yangilash
+    return this.moduleRepository.save(module); // Yangilangan modulni saqlash
   }
 
   async deleteModule(id: number): Promise<string> {

@@ -74,4 +74,15 @@ export class LessonsService {
       throw new NotFoundException('Lesson not found');
     }
   }
+
+  async getModuleAndCourseByLessonId(lessonId: number): Promise<{ module: Modules; course: Course}> {
+    const lesson = await this.lessonRepository.findOne({
+      where: { id: lessonId },
+      relations: ['module', 'module.course'], // Modul va kurs ma'lumotlarini olish
+    });
+    if (!lesson) {
+      throw new NotFoundException('Lesson not found');
+    }
+    return { module: lesson.module, course: lesson.module.course }; // Modul va kursni qaytarish
+  }
 }

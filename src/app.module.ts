@@ -11,9 +11,9 @@ import { Course } from './courses/entities/course.entity';
 import { EnrollmentModule } from './enrollment/enrollment.module';
 import { Enrollment } from './enrollment/entities/enrollment.entity';
 import { LessonsModule } from './lessons/lessons.module';
+import { Lesson } from './lessons/entities/lesson.entity';
 import { ModulesModule } from './modules/modules.module';
 import { Modules } from './modules/entities/module.entity';
-import { Lesson } from './lessons/entities/lesson.entity';
 
 @Module({
   imports: [
