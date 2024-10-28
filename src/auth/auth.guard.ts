@@ -1,35 +1,41 @@
-// src/auth/auth.guard.ts
-
 import {
     CanActivate,
     ExecutionContext,
     Injectable,
     UnauthorizedException,
-  } from '@nestjs/common';
-  import { JwtService } from '@nestjs/jwt';
-  import { Request } from 'express';
-  
-  @Injectable()
-  export class AuthGuard implements CanActivate {
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { Request } from 'express';
+import * as dotenv from 'dotenv';
+dotenv.config();
+
+@Injectable()
+export class AuthGuard implements CanActivate {
     constructor(private jwtService: JwtService) {}
-  
+
     async canActivate(context: ExecutionContext): Promise<boolean> {
-      const request = context.switchToHttp().getRequest<Request>();
-      const [type, token] = request.headers.authorization?.split(' ') ?? [];
-      
-      if (!token) {
-        throw new UnauthorizedException();
-      }
-      const payload = await this.jwtService.verify(token, {
-        secret: 'Judayam Secret', // bu qatorni env. file'dan olishingiz mumkin
-      });
-  
-      if (!payload) {
-        throw new UnauthorizedException();
-      }
-      request['payload'] = payload;
-  
-      return true;
+        const request = context.switchToHttp().getRequest<Request>();
+        const authHeader = request.headers.authorization;
+
+        if (!authHeader) {
+            throw new UnauthorizedException('Authorization header is missing');
+        }
+
+        const [type, token] = authHeader.split(' ');
+
+        if (type !== 'Bearer' || !token) {
+            throw new UnauthorizedException('Invalid authorization format');
+        }
+
+        try {
+            const payload = await this.jwtService.verify(token, {
+                secret: process.env.JWT_SECRET // bu qatorni env. file'dan olishingiz mumkin
+            });
+            request['user'] = payload; // 'payload' o'rniga 'user' deb o'zgartirish mumkin
+        } catch (error) {
+            throw new UnauthorizedException('Invalid token or token expired');
+        }
+
+        return true;
     }
-  }
-  
+}

@@ -4,7 +4,7 @@ import { Controller, Get, Post, Body, UseGuards, Req, SetMetadata } from '@nestj
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { AuthGuard } from './auth.guard';
-import { RoleGuard } from './role.guard';
+import { RolesGuard } from './role.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -20,14 +20,14 @@ export class AuthController {
     return this.authService.login(loginDto);
   }
 
-  @UseGuards(AuthGuard, RoleGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @SetMetadata('roles', ['admin'])
   @Get('admin-data')
   getAdminData(@Req() req) {
     return this.authService.getAllMyData(req['payload']);
   }
 
-  @UseGuards(AuthGuard, RoleGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @SetMetadata('roles', ['student'])
   @Get('student-data')
   getStudentData(@Req() req) {
