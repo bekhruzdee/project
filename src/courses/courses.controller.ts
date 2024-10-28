@@ -45,6 +45,11 @@ export class CoursesController {
     return this.coursesService.findByCategory(category);
   }
 
+  @Get(':courseId/modules')
+  async getModulesByCourseId(@Param('courseId') courseId: number) {
+    return this.coursesService.getModulesByCourseId(courseId);
+  }
+
   @UseGuards(AuthGuard, RolesGuard)
   @Patch(':id')
   async update(

@@ -11,13 +11,9 @@ import { Course } from './courses/entities/course.entity';
 import { EnrollmentModule } from './enrollment/enrollment.module';
 import { Enrollment } from './enrollment/entities/enrollment.entity';
 import { LessonsModule } from './lessons/lessons.module';
-import { Lesson } from './lessons/entities/lesson.entity';
 import { ModulesModule } from './modules/modules.module';
 import { Modules } from './modules/entities/module.entity';
-import { AssignmentsModule } from './assignments/assignments.module';
-import { Assignment } from './assignments/entities/assignment.entity';
-import { ResultsModule } from './results/results.module';
-import { Result } from './results/entities/result.entity';
+import { Lesson } from './lessons/entities/lesson.entity';
 
 @Module({
   imports: [
@@ -29,7 +25,7 @@ import { Result } from './results/entities/result.entity';
       username: process.env.DB_USERNAME, 
       password: process.env.DB_PASSWORD, 
       database: process.env.DB_DATABASE, 
-      entities: [User, Course, Enrollment, Lesson, Modules, Assignment, Result],
+      entities: [User, Course, Enrollment, Modules, Lesson],
       synchronize: true,
       // logging: true,
     }),
@@ -38,9 +34,7 @@ import { Result } from './results/entities/result.entity';
     CoursesModule,
     EnrollmentModule,
     LessonsModule,
-    ModulesModule,
-    AssignmentsModule,
-    ResultsModule
+    ModulesModule
   ],
   controllers: [AppController],
   providers: [AppService],

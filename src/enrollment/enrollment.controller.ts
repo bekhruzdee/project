@@ -1,12 +1,15 @@
-import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, UseGuards } from '@nestjs/common';
 import { EnrollmentService } from './enrollment.service';
 import { Enrollment } from './entities/enrollment.entity';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { RolesGuard } from 'src/auth/role.guard';
 
 @Controller('enrollments') // URL: /enrollments
 export class EnrollmentController {
   constructor(private readonly enrollmentService: EnrollmentService) {}
 
   // Foydalanuvchini kursga yozish
+  @UseGuards(AuthGuard)
   @Post()
   async enrollUser(
     @Body() body: { userId: number; courseId: number },
@@ -16,6 +19,7 @@ export class EnrollmentController {
   }
 
   // Foydalanuvchi tomonidan yozilgan kurslarni olish
+  @UseGuards(AuthGuard)
   @Get(':userId')
   async getUserEnrollments(
     @Param('userId') userId: number,
@@ -23,6 +27,7 @@ export class EnrollmentController {
     return this.enrollmentService.getEnrollmentsByUserId(userId);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
   @Get('course/:courseId')
   async getEnrollmentsByCourseId(
     @Param('courseId') courseId: number,

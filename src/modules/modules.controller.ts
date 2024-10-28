@@ -1,40 +1,61 @@
-import { Controller, Get, Post, Body, Param, Patch, Delete } from '@nestjs/common';
-import { CreateModuleDto } from './dto/create-module.dto';
-import { UpdateModuleDto } from './dto/update-module.dto';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  Delete,
+  Patch,
+  UseGuards,
+} from '@nestjs/common';
 import { Modules } from './entities/module.entity';
 import { ModulesService } from './modules.service';
+import { LessonsService } from 'src/lessons/lessons.service';
+import { Lesson } from 'src/lessons/entities/lesson.entity';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { RolesGuard } from 'src/auth/role.guard';
 
 @Controller('modules')
 export class ModulesController {
-  constructor(private readonly moduleService: ModulesService) {}
+  constructor(
+    private readonly moduleService: ModulesService,
+    private readonly lessonService: LessonsService,
+  ) {}
 
+  @UseGuards(AuthGuard, RolesGuard)
   @Post()
-  async create(@Body() createModuleDto: CreateModuleDto): Promise<Modules> {
-    console.log('Creating module...');
-    return this.moduleService.create(createModuleDto);
+  async createModule(
+    @Body('courseId') courseId: number,
+    @Body('name') name: string,
+  ): Promise<Modules> {
+    return this.moduleService.createModule(courseId, name);
   }
 
-  @Get()
-  async findAll(): Promise<Modules[]> {
-    console.log('Fetching all modules...');
-    return this.moduleService.findAll();
+  @Get(':courseId')
+  async getAllModules(@Param('courseId') courseId: number): Promise<Modules[]> {
+    return this.moduleService.getAllModules(courseId);
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: number): Promise<Modules> {
-    console.log(`Fetching module with ID: ${id}`);
-    return this.moduleService.findOne(id);
-  }
-
+  @UseGuards(AuthGuard, RolesGuard)
   @Patch(':id')
-  async update(@Param('id') id: number, @Body() updateModuleDto: UpdateModuleDto): Promise<Modules> {
-    console.log(`Updating module with ID: ${id}`);
-    return this.moduleService.update(id, updateModuleDto);
+  async updateModule(
+    @Param('id') id: number,
+    @Body() body: { name: string },
+  ): Promise<Modules> {
+    return this.moduleService.updateModule(id, body.name);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
   @Delete(':id')
-  async remove(@Param('id') id: number): Promise<void> {
-    console.log(`Removing module with ID: ${id}`);
-    return this.moduleService.remove(id);
+  async deleteModule(@Param('id') id: number): Promise<string> {
+    return this.moduleService.deleteModule(id);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get(':moduleId/lessons')
+  async getModuleWithLessons(
+    @Param('moduleId') moduleId: number,
+  ): Promise<Modules> {
+    return this.moduleService.getModuleWithLessons(moduleId);
   }
 }

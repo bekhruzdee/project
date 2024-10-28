@@ -1,10 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateModuleDto } from './dto/create-module.dto';
-import { UpdateModuleDto } from './dto/update-module.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Modules } from './entities/module.entity';
 import { Repository } from 'typeorm';
+import { Modules } from './entities/module.entity';
 import { Course } from 'src/courses/entities/course.entity';
+import { Lesson } from 'src/lessons/entities/lesson.entity';
 
 @Injectable()
 export class ModulesService {
@@ -12,66 +11,64 @@ export class ModulesService {
     @InjectRepository(Modules)
     private readonly moduleRepository: Repository<Modules>,
     @InjectRepository(Course)
-    private readonly courseRepository: Repository<Course>,
+    private readonly courseRepository: Repository<Course>
   ) {}
 
-  async create(createModuleDto: CreateModuleDto): Promise<Modules> {
-    const course = await this.courseRepository.findOneBy({ id: createModuleDto.courseId });
+  async createModule(courseId: number, name: string): Promise<Modules> {
+    const course = await this.courseRepository.findOne({
+      where: { id: courseId },
+    });
     if (!course) {
-      throw new NotFoundException(`Course with ID ${createModuleDto.courseId} not found`);
+      throw new NotFoundException('Course not found');
     }
-    
-    const module = this.moduleRepository.create({
-      ...createModuleDto,
-      course,
+
+    const module = this.moduleRepository.create({ name, course });
+    return this.moduleRepository.save(module);
+  }
+
+  async getAllModules(courseId: number): Promise<Modules[]> {
+    const course = await this.courseRepository.findOne({
+      where: { id: courseId },
+      relations: ['modules'],
     });
 
-    const savedModule = await this.moduleRepository.save(module);
-    console.log(`Module created with ID: ${savedModule.id}`);
-    return savedModule;
+    if (!course) {
+      throw new NotFoundException('Course not found');
+    }
+
+    return course.modules; 
   }
 
-  async findAll(): Promise<Modules[]> {
-    const modules = await this.moduleRepository.find({ relations: ['course', 'lessons'] });
-    console.log(`Retrieved ${modules.length} modules`);
-    return modules;
-  }
-
-  async findOne(id: number): Promise<Modules> {
+  async updateModule(id: number, name: string): Promise<Modules> {
     const module = await this.moduleRepository.findOne({
       where: { id },
-      relations: ['course', 'lessons'],
     });
     if (!module) {
-      throw new NotFoundException(`Module with ID ${id} not found`);
+      throw new NotFoundException('Module not found');
     }
-    console.log(`Module found: ${module.name}`);
-    return module;
+
+    module.name = name; 
+    return this.moduleRepository.save(module); 
   }
 
-  async update(id: number, updateModuleDto: UpdateModuleDto): Promise<Modules> {
-    const module = await this.moduleRepository.findOneBy({ id });
+  async deleteModule(id: number): Promise<string> {
+    const result = await this.moduleRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException('Module not found');
+    }
+    return `Module with id ${id} has been successfully deleted`; 
+  }
+
+  async getModuleWithLessons(moduleId: number): Promise<Modules> {
+    const module = await this.moduleRepository.findOne({
+      where: { id: moduleId },
+      relations: ['lessons'], 
+    });
+
     if (!module) {
-      throw new NotFoundException(`Module with ID ${id} not found`);
-    }
-    
-    if (updateModuleDto.courseId) {
-      const course = await this.courseRepository.findOneBy({ id: updateModuleDto.courseId });
-      if (!course) {
-        throw new NotFoundException(`Course with ID ${updateModuleDto.courseId} not found`);
-      }
-      module.course = course;
+      throw new NotFoundException('Module not found');
     }
 
-    Object.assign(module, updateModuleDto);
-    const updatedModule = await this.moduleRepository.save(module);
-    console.log(`Module updated with ID: ${updatedModule.id}`);
-    return updatedModule;
-  }
-
-  async remove(id: number): Promise<void> {
-    const module = await this.findOne(id);
-    await this.moduleRepository.remove(module);
-    console.log(`Module with ID ${id} removed`);
+    return module;
   }
 }

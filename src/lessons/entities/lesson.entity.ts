@@ -12,6 +12,9 @@ export class Lesson {
   @Column('text')
   content: string;
 
+  @Column({ type: 'int', nullable: false })
+  moduleId: number;
+
   @ManyToOne(() => Modules, (module) => module.lessons, { onDelete: 'CASCADE' })
   module: Modules;
 }

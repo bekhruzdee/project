@@ -1,13 +1,4 @@
-import { IsOptional, IsNotEmpty } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateLessonDto } from './create-lesson.dto';
 
-export class UpdateLessonDto {
-  @IsOptional()
-  @IsNotEmpty()
-  title?: string;
-
-  @IsOptional()
-  content?: string;
-
-  @IsOptional()
-  moduleId?: number; // Ixtiyoriy
-}
+export class UpdateLessonDto extends PartialType(CreateLessonDto) {}
