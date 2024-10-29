@@ -9,7 +9,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateAdminDto } from './dto/create-admin.dto'; // Admin yaratish uchun DTO
 import { AuthGuard } from 'src/auth/auth.guard';
@@ -27,11 +26,13 @@ export class UsersController {
     return this.usersService.createAdmin(createAdminDto); // Admin yaratish xizmatiga chaqiruv
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
   @Get(`all`)
   findAll() {
     return this.usersService.findAll();
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
   @Get('id/:id')
   findOne(@Param('id') id: number) {
     return this.usersService.findOne(+id);

@@ -61,6 +61,10 @@ export class AuthService {
     return { userData, access_token: accessToken, refresh_token: refreshToken };
   }
 
+  logout(): { message: string } {
+    return { message: 'Logout successful' };
+  }
+
   // 3. Foydalanuvchi ma'lumotlarini olish funksiyasi
   async getAllMyData(payload: any) {
     const user = await this.userRepository.findOneBy({ id: payload.id });

@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { Assignment } from 'src/assignments/entities/assignment.entity';
 import { Enrollment } from 'src/enrollment/entities/enrollment.entity';
+import { Result } from 'src/results/entities/result.entity';
 import {
   Column,
   CreateDateColumn,
@@ -28,4 +30,7 @@ export class User {
 
   @OneToMany(() => Enrollment, (enrollment) => enrollment.user) // User va Enrollment o'rtasidagi ulanish
   enrollments: Enrollment[];
+
+  @OneToMany(() => Result, (result) => result.user)
+  results: Result[];
 }

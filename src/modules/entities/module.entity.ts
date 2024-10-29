@@ -1,3 +1,4 @@
+import { Assignment } from 'src/assignments/entities/assignment.entity';
 import { Course } from 'src/courses/entities/course.entity';
 import { Lesson } from 'src/lessons/entities/lesson.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
@@ -17,4 +18,7 @@ export class Modules {
 
   @OneToMany(() => Lesson, (lesson) => lesson.module)
   lessons: Lesson[];
+
+  @OneToMany(() => Assignment, (assignment) => assignment.module)
+  assignments: Assignment[]
 }

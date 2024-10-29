@@ -9,6 +9,7 @@ import {
   UseGuards,
   Patch,
   Query,
+  NotFoundException,
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
@@ -26,6 +27,15 @@ export class CoursesController {
   async create(@Body() createCourseDto: CreateCourseDto): Promise<Course> {
     return this.coursesService.create(createCourseDto);
   }
+
+  @Get(':id')
+async findOne(@Param('id') id: number): Promise<Course> {
+  const course = await this.coursesService.findOne(id);
+  if (!course) {
+    throw new NotFoundException(`Course with ID ${id} not found.`);
+  }
+  return course;
+}
 
   @Get()
   async findAll(): Promise<Course[]> {

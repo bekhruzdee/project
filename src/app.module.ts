@@ -14,18 +14,22 @@ import { LessonsModule } from './lessons/lessons.module';
 import { Lesson } from './lessons/entities/lesson.entity';
 import { ModulesModule } from './modules/modules.module';
 import { Modules } from './modules/entities/module.entity';
+import { AssignmentsModule } from './assignments/assignments.module';
+import { ResultsModule } from './results/results.module';
+import { Assignment } from './assignments/entities/assignment.entity';
+import { Result } from './results/entities/result.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DB_HOST, 
-      port: +process.env.DB_PORT, 
-      username: process.env.DB_USERNAME, 
-      password: process.env.DB_PASSWORD, 
-      database: process.env.DB_DATABASE, 
-      entities: [User, Course, Enrollment, Modules, Lesson],
+      host: process.env.DB_HOST,
+      port: +process.env.DB_PORT,
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
+      entities: [User, Course, Enrollment, Modules, Lesson, Assignment, Result],
       synchronize: true,
       // logging: true,
     }),
@@ -34,7 +38,9 @@ import { Modules } from './modules/entities/module.entity';
     CoursesModule,
     EnrollmentModule,
     LessonsModule,
-    ModulesModule
+    ModulesModule,
+    AssignmentsModule,
+    ResultsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

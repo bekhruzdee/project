@@ -25,6 +25,14 @@ export class CoursesService {
     return this.courseRepository.find();
   }
 
+  async findOne(id: number): Promise<Course> {
+    const course = await this.courseRepository.findOne({
+      where: { id },
+    });
+    return course;
+  }
+  
+
   async findByName(
     name: string,
   ): Promise<{ message: string; courses?: Course[] }> {
