@@ -1,12 +1,20 @@
 // src/auth/auth.controller.ts
 
-import { Controller, Get, Post, Body, UseGuards, Req, SetMetadata, Res } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  UseGuards,
+  Req,
+  SetMetadata,
+  Res,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { AuthGuard } from './auth.guard';
 import { RolesGuard } from './role.guard';
 import { Response } from 'express';
-
 
 @Controller('auth')
 export class AuthController {
@@ -26,7 +34,7 @@ export class AuthController {
   @UseGuards(AuthGuard)
   logout(@Res() res: Response) {
     const result = this.authService.logout();
-    res.clearCookie('token'); // Cookie’dan tokenni o‘chirish (agar cookie orqali saqlangan bo‘lsa)
+    res.clearCookie('token');
     return res.status(200).json(result);
   }
 
