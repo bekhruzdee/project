@@ -28,15 +28,6 @@ export class CoursesController {
     return this.coursesService.create(createCourseDto);
   }
 
-  @Get(':id')
-async findOne(@Param('id') id: number): Promise<Course> {
-  const course = await this.coursesService.findOne(id);
-  if (!course) {
-    throw new NotFoundException(`Course with ID ${id} not found.`);
-  }
-  return course;
-}
-
   @Get()
   async findAll(): Promise<Course[]> {
     const courses = await this.coursesService.findAll();
@@ -44,7 +35,10 @@ async findOne(@Param('id') id: number): Promise<Course> {
   }
 
   @Get('find')
-  async findByName(@Query('name') name: string) {
+  async findByName(@Query('name') name?: string) {
+    if (!name) {
+      return { message: 'Please provide a course name to search.' };
+    }
     return this.coursesService.findByName(name);
   }
 
