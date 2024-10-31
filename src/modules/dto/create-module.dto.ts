@@ -5,5 +5,5 @@ export class CreateModuleDto {
   name: string;
 
   @IsNotEmpty()
-  courseId: number;  // Qo'shilishi kerak
+  courseId: number;
 }

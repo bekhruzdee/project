@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsString, IsEmail, MinLength, IsIn } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  IsEmail,
+  MinLength,
+  IsIn,
+} from 'class-validator';
 
 export class CreateAdminDto {
   @IsNotEmpty()
@@ -15,8 +21,8 @@ export class CreateAdminDto {
   @MinLength(6)
   password: string;
 
-  @IsNotEmpty() // Bu qiymat bo'sh bo'lmasligini ta'minlaydi
-  @IsString() // Bu qiymat string turida bo'lishini ta'minlaydi
-  @IsIn(['admin']) // Faqat 'admin' qiymatini qabul qiladi
+  @IsNotEmpty()
+  @IsString()
+  @IsIn(['admin'])
   role: string;
 }

@@ -9,7 +9,6 @@ import {
   UseGuards,
   Patch,
   Query,
-  NotFoundException,
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';

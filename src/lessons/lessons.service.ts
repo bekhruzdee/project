@@ -19,35 +19,38 @@ export class LessonsService {
     content: string,
     moduleId: number,
   ): Promise<Lesson> {
-    const module = await this.moduleRepository.findOne({ where: { id: moduleId } });
-  
+    const module = await this.moduleRepository.findOne({
+      where: { id: moduleId },
+    });
+
     if (!module) {
       throw new NotFoundException('Module not found');
     }
-  
+
     const lesson = new Lesson();
     lesson.title = title;
     lesson.content = content;
     lesson.module = module;
-  
+
     return this.lessonRepository.save(lesson);
   }
 
   async getLessonsByModuleId(moduleId: number): Promise<Lesson[]> {
-    const lessons = await this.lessonRepository.find({ where: { module: { id: moduleId } } });
+    const lessons = await this.lessonRepository.find({
+      where: { module: { id: moduleId } },
+    });
     if (lessons.length === 0) {
       throw new NotFoundException('Lessons not found for this module');
     }
     return lessons;
   }
-  
 
   async getAllLessons(moduleId: number): Promise<Lesson[]> {
     const module = await this.moduleRepository.findOne({
       where: {
-        id: moduleId
+        id: moduleId,
       },
-     relations: ['lessons'] 
+      relations: ['lessons'],
     });
     if (!module) {
       throw new NotFoundException('Module not found');
@@ -55,10 +58,16 @@ export class LessonsService {
     return module.lessons;
   }
 
-  async updateLesson(id: number, title: string, content: string): Promise<Lesson> {
-    const lesson = await this.lessonRepository.findOne({where: {
-      id
-    }});
+  async updateLesson(
+    id: number,
+    title: string,
+    content: string,
+  ): Promise<Lesson> {
+    const lesson = await this.lessonRepository.findOne({
+      where: {
+        id,
+      },
+    });
     if (!lesson) {
       throw new NotFoundException('Lesson not found');
     }
@@ -75,14 +84,16 @@ export class LessonsService {
     }
   }
 
-  async getModuleAndCourseByLessonId(lessonId: number): Promise<{ module: Modules; course: Course}> {
+  async getModuleAndCourseByLessonId(
+    lessonId: number,
+  ): Promise<{ module: Modules; course: Course }> {
     const lesson = await this.lessonRepository.findOne({
       where: { id: lessonId },
-      relations: ['module', 'module.course'], // Modul va kurs ma'lumotlarini olish
+      relations: ['module', 'module.course'],
     });
     if (!lesson) {
       throw new NotFoundException('Lesson not found');
     }
-    return { module: lesson.module, course: lesson.module.course }; // Modul va kursni qaytarish
+    return { module: lesson.module, course: lesson.module.course };
   }
 }

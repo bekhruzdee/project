@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Assignment } from 'src/assignments/entities/assignment.entity';
 import { Enrollment } from 'src/enrollment/entities/enrollment.entity';
 import { Result } from 'src/results/entities/result.entity';
 import {
@@ -28,7 +27,7 @@ export class User {
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
 
-  @OneToMany(() => Enrollment, (enrollment) => enrollment.user) // User va Enrollment o'rtasidagi ulanish
+  @OneToMany(() => Enrollment, (enrollment) => enrollment.user)
   enrollments: Enrollment[];
 
   @OneToMany(() => Result, (result) => result.user)

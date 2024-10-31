@@ -1,6 +1,10 @@
 // src/auth/auth.service.ts
 
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -16,31 +20,27 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  // 1. Ro'yxatdan o'tish funksiyasi
   async create(createAuthDto: CreateAuthDto) {
-    // Username va emailni tekshirish
     const existingUser = await this.userRepository.findOne({
       where: [
         { username: createAuthDto.username },
         { email: createAuthDto.email },
       ],
     });
-  
+
     if (existingUser) {
       throw new ConflictException('Username or Email already exists.');
     }
-  
+
     const user = this.userRepository.create();
     user.username = createAuthDto.username;
     user.password = await bcrypt.hash(createAuthDto.password, 10);
     user.email = createAuthDto.email;
-  
+
     await this.userRepository.save(user);
     return 'You are registered✅';
   }
-  
 
-  // 2. Kirish funksiyasi va token yaratish
   async login(loginDto: { username: string; password: string }) {
     const user = await this.userRepository.findOneBy({
       username: loginDto.username,
@@ -65,7 +65,6 @@ export class AuthService {
     return { message: 'Logout successful' };
   }
 
-  // 3. Foydalanuvchi ma'lumotlarini olish funksiyasi
   async getAllMyData(payload: any) {
     const user = await this.userRepository.findOneBy({ id: payload.id });
     return user;

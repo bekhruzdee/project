@@ -1,7 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
 import { Modules } from 'src/modules/entities/module.entity';
 import { Result } from 'src/results/entities/result.entity';
-import { User } from 'src/users/entities/user.entity';
 
 @Entity('assignments')
 export class Assignment {
@@ -14,7 +20,9 @@ export class Assignment {
   @Column({ type: 'varchar', default: 'auto' })
   gradingType: string;
 
-  @ManyToOne(() => Modules, (module) => module.assignments, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Modules, (module) => module.assignments, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'moduleId' })
   module: Modules;
 

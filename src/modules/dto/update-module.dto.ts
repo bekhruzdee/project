@@ -6,5 +6,5 @@ export class UpdateModuleDto {
   name?: string;
 
   @IsOptional()
-  courseId?: number; // Qo'shilishi kerak
+  courseId?: number;
 }

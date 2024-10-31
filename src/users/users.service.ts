@@ -2,11 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { CreateUserDto } from './dto/create-user.dto'; // Foydalanuvchini yaratish DTO
-import { UpdateUserDto } from './dto/update-user.dto'; // Foydalanuvchini yangilash DTO
-import { CreateAdminDto } from './dto/create-admin.dto'; // Admin yaratish DTO
+import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateAdminDto } from './dto/create-admin.dto';
 import * as bcrypt from 'bcrypt';
-import { RolesGuard } from 'src/auth/role.guard';
 
 @Injectable()
 export class UsersService {
@@ -15,7 +13,6 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  // Adminni yaratish
   async createAdmin(
     createAdminDto: CreateAdminDto,
   ): Promise<{ success: boolean; message: string; data?: User }> {
@@ -30,12 +27,11 @@ export class UsersService {
       };
     }
 
-    // Parolni hashlab saqlash
     const hashedPassword = await bcrypt.hash(createAdminDto.password, 10);
 
     const newAdmin = this.usersRepository.create({
       ...createAdminDto,
-      password: hashedPassword, // Hashed parolni qo'shamiz
+      password: hashedPassword,
     });
 
     const savedAdmin = await this.usersRepository.save(newAdmin);
@@ -47,7 +43,6 @@ export class UsersService {
     };
   }
 
-  // Barcha foydalanuvchilarni olish
   async findAll(): Promise<{
     success: boolean;
     message: string;
@@ -61,7 +56,6 @@ export class UsersService {
     };
   }
 
-  // Foydalanuvchini ID orqali olish
   async findOne(id: number): Promise<User> {
     const user = await this.usersRepository.findOne({ where: { id } });
     if (!user) {
@@ -70,7 +64,6 @@ export class UsersService {
     return user;
   }
 
-  // Foydalanuvchini yangilash
   async update(
     userId: number,
     updateUserDto: UpdateUserDto,
@@ -98,7 +91,6 @@ export class UsersService {
     };
   }
 
-  // Foydalanuvchini o'chirish
   async remove(userId: number): Promise<{ success: boolean; message: string }> {
     const existingUser = await this.usersRepository.findOne({
       where: { id: userId },

@@ -8,5 +8,5 @@ export class CreateLessonDto {
   content: string;
 
   @IsNotEmpty()
-  moduleId: number; // Modulni identifikatori
+  moduleId: number;
 }

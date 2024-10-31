@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { AssignmentsService } from './assignments.service';
 import { CreateAssignmentDto } from './dto/create-assignment.dto';
-import { UpdateAssignmentDto } from './dto/update-assignment.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { RolesGuard } from 'src/auth/role.guard';
 
@@ -53,6 +52,6 @@ export class AssignmentsController {
   @UseGuards(AuthGuard, RolesGuard)
   @Delete(':id')
   async deleteAssignment(@Param('id') id: number): Promise<string> {
-    return await this.assignmentsService.deleteAssignment(id); // Xabarni qaytaradi
+    return await this.assignmentsService.deleteAssignment(id);
   }
 }

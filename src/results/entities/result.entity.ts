@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { Assignment } from 'src/assignments/entities/assignment.entity';
 import { User } from 'src/users/entities/user.entity';
 
@@ -13,7 +19,9 @@ export class Result {
   @Column()
   grade: number;
 
-  @ManyToOne(() => Assignment, (assignment) => assignment.results, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Assignment, (assignment) => assignment.results, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'assignmentId' })
   assignment: Assignment;
 

@@ -12,14 +12,16 @@ export class ResultsService {
 
   async findAllByUser(userId: number): Promise<Result[]> {
     const results = await this.resultRepository.find({
-      where: { user: { id: userId } }, // userId bo'yicha qidiramiz
-      relations: ['assignment', 'user'], // user va assignmentni qo'shamiz
+      where: { user: { id: userId } },
+      relations: ['assignment', 'user'],
     });
-    
+
     if (!results.length) {
-      throw new NotFoundException(`No results found for user with ID ${userId}`);
+      throw new NotFoundException(
+        `No results found for user with ID ${userId}`,
+      );
     }
-    
+
     return results;
   }
 }

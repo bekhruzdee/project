@@ -4,11 +4,10 @@ import { Enrollment } from './entities/enrollment.entity';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { RolesGuard } from 'src/auth/role.guard';
 
-@Controller('enrollments') // URL: /enrollments
+@Controller('enrollments')
 export class EnrollmentController {
   constructor(private readonly enrollmentService: EnrollmentService) {}
 
-  // Foydalanuvchini kursga yozish
   @UseGuards(AuthGuard)
   @Post()
   async enrollUser(
@@ -18,7 +17,6 @@ export class EnrollmentController {
     return this.enrollmentService.enrollUser(userId, courseId);
   }
 
-  // Foydalanuvchi tomonidan yozilgan kurslarni olish
   @UseGuards(AuthGuard)
   @Get(':userId')
   async getUserEnrollments(

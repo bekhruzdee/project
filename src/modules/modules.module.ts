@@ -8,7 +8,6 @@ import { Lesson } from 'src/lessons/entities/lesson.entity';
 import { LessonsModule } from 'src/lessons/lessons.module';
 import { LessonsService } from 'src/lessons/lessons.service';
 
-
 @Module({
   imports: [TypeOrmModule.forFeature([Modules, Lesson, Course]), LessonsModule],
   controllers: [ModulesController],

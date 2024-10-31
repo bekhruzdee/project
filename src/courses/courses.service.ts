@@ -30,12 +30,12 @@ export class CoursesService {
   ): Promise<{ message: string; courses?: Course[] }> {
     const courses = await this.courseRepository
       .createQueryBuilder('course')
-      .where('course.name ILIKE :name', { name: `%${name}%` }) // ILIKE case-insensitive qidirish
+      .where('course.name ILIKE :name', { name: `%${name}%` })
       .getMany();
 
     if (courses.length === 0) {
       return {
-        message: 'Course not found', // Kurs topilmasa xabar
+        message: 'Course not found',
       };
     }
 
@@ -77,9 +77,9 @@ export class CoursesService {
   }
 
   async remove(id: number): Promise<string> {
-    const result = await this.courseRepository.delete(id); // ID bo'yicha o'chirish
+    const result = await this.courseRepository.delete(id);
     if (result.affected === 0) {
-      throw new Error('Course not found'); // Agar kurs topilmasa xato
+      throw new Error('Course not found');
     }
     return `Course with id ${id} has been successfully deleted`;
   }

@@ -10,20 +10,17 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { CreateAdminDto } from './dto/create-admin.dto'; // Admin yaratish uchun DTO
+import { CreateAdminDto } from './dto/create-admin.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { RolesGuard } from 'src/auth/role.guard';
-
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  
-
-  @Post(`create-admin`) // Adminni yaratish uchun yangi route
+  @Post(`create-admin`)
   createAdmin(@Body() createAdminDto: CreateAdminDto) {
-    return this.usersService.createAdmin(createAdminDto); // Admin yaratish xizmatiga chaqiruv
+    return this.usersService.createAdmin(createAdminDto);
   }
 
   @UseGuards(AuthGuard, RolesGuard)

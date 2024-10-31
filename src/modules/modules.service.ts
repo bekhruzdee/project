@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Modules } from './entities/module.entity';
 import { Course } from 'src/courses/entities/course.entity';
-import { Lesson } from 'src/lessons/entities/lesson.entity';
 
 @Injectable()
 export class ModulesService {
@@ -11,7 +10,7 @@ export class ModulesService {
     @InjectRepository(Modules)
     private readonly moduleRepository: Repository<Modules>,
     @InjectRepository(Course)
-    private readonly courseRepository: Repository<Course>
+    private readonly courseRepository: Repository<Course>,
   ) {}
 
   async createModule(courseId: number, name: string): Promise<Modules> {
@@ -29,14 +28,14 @@ export class ModulesService {
   async getAllModules(courseId: number): Promise<Modules[]> {
     const course = await this.courseRepository.findOne({
       where: { id: courseId },
-      relations: ['modules'], // Kurs bilan bog'langan modullarni olish
+      relations: ['modules'],
     });
 
     if (!course) {
       throw new NotFoundException('Course not found');
     }
 
-    return course.modules; // Modullarni qaytarish
+    return course.modules;
   }
 
   async updateModule(id: number, name: string): Promise<Modules> {
@@ -47,8 +46,8 @@ export class ModulesService {
       throw new NotFoundException('Module not found');
     }
 
-    module.name = name; // Modul nomini yangilash
-    return this.moduleRepository.save(module); // Yangilangan modulni saqlash
+    module.name = name;
+    return this.moduleRepository.save(module);
   }
 
   async deleteModule(id: number): Promise<string> {
@@ -56,13 +55,13 @@ export class ModulesService {
     if (result.affected === 0) {
       throw new NotFoundException('Module not found');
     }
-    return `Module with id ${id} has been successfully deleted`; 
+    return `Module with id ${id} has been successfully deleted`;
   }
 
   async getModuleWithLessons(moduleId: number): Promise<Modules> {
     const module = await this.moduleRepository.findOne({
       where: { id: moduleId },
-      relations: ['lessons'], 
+      relations: ['lessons'],
     });
 
     if (!module) {

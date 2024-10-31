@@ -41,7 +41,6 @@ export class LessonsController {
     return this.lessonService.getAllLessons(moduleId);
   }
 
-
   @UseGuards(AuthGuard, RolesGuard)
   @Patch(':id')
   async updateLesson(
