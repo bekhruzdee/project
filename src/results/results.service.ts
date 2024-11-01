@@ -22,6 +22,12 @@ export class ResultsService {
       );
     }
 
+    results.forEach((result) => {
+      if (result.user) {
+        delete result.user.password;
+      }
+    });
+
     return results;
   }
 }

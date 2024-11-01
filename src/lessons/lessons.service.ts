@@ -45,19 +45,6 @@ export class LessonsService {
     return lessons;
   }
 
-  async getAllLessons(moduleId: number): Promise<Lesson[]> {
-    const module = await this.moduleRepository.findOne({
-      where: {
-        id: moduleId,
-      },
-      relations: ['lessons'],
-    });
-    if (!module) {
-      throw new NotFoundException('Module not found');
-    }
-    return module.lessons;
-  }
-
   async updateLesson(
     id: number,
     title: string,

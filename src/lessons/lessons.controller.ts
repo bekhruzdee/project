@@ -35,12 +35,6 @@ export class LessonsController {
     }
   }
 
-  @UseGuards(AuthGuard)
-  @Get()
-  async getAllLessons(@Param('moduleId') moduleId: number): Promise<Lesson[]> {
-    return this.lessonService.getAllLessons(moduleId);
-  }
-
   @UseGuards(AuthGuard, RolesGuard)
   @Patch(':id')
   async updateLesson(
