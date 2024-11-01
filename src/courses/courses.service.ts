@@ -45,7 +45,7 @@ export class CoursesService {
     };
   }
 
-  // CourseService
+  
   async findByCategory(category: string): Promise<Course[]> {
     return this.courseRepository.find({ where: { category } });
   }

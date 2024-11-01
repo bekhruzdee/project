@@ -22,9 +22,19 @@ export class AssignmentsService {
   }
 
   async findAll(): Promise<Assignment[]> {
-    return await this.assignmentRepository.find({
+    const assignments = await this.assignmentRepository.find({
       relations: ['results', 'results.user'],
     });
+
+    assignments.forEach((assignment) => {
+      assignment.results.forEach((result) => {
+        if (result.user) {
+          delete result.user.password;
+        }
+      });
+    });
+
+    return assignments;
   }
 
   async findOne(id: number): Promise<Assignment> {
@@ -32,9 +42,17 @@ export class AssignmentsService {
       where: { id },
       relations: ['results', 'results.user'],
     });
+
     if (!assignment) {
       throw new NotFoundException(`Assignment with ID ${id} not found`);
     }
+
+    assignment.results.forEach((result) => {
+      if (result.user) {
+        delete result.user.password;
+      }
+    });
+
     return assignment;
   }
 

@@ -6,7 +6,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -55,10 +54,9 @@ export class AuthService {
 
     const payload = { id: user.id, username: user.username, role: user.role };
     const accessToken = this.jwtService.sign(payload, { expiresIn: '1d' });
-    const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
 
     const { password, ...userData } = user;
-    return { userData, access_token: accessToken, refresh_token: refreshToken };
+    return { userData, access_token: accessToken};
   }
 
   logout(): { message: string } {

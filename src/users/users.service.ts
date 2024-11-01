@@ -46,9 +46,11 @@ export class UsersService {
   async findAll(): Promise<{
     success: boolean;
     message: string;
-    data: User[];
+    data: Omit<User, 'password'>[];
   }> {
-    const users = await this.usersRepository.find();
+    const users = await this.usersRepository.find({
+      select: ['id', 'username', 'email', 'role', 'created_at', 'updated_at'],
+    });
     return {
       success: true,
       message: 'Users data retrieved successfully',
@@ -56,11 +58,16 @@ export class UsersService {
     };
   }
 
-  async findOne(id: number): Promise<User> {
-    const user = await this.usersRepository.findOne({ where: { id } });
+  async findOne(id: number): Promise<Omit<User, 'password'>> {
+    const user = await this.usersRepository.findOne({
+      where: { id },
+      select: ['id', 'username', 'email', 'role', 'created_at', 'updated_at'],
+    });
+
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
+
     return user;
   }
 
