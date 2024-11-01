@@ -6,11 +6,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
+import { UpdateAuthDto } from './dto/update-auth.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -40,7 +42,7 @@ export class AuthService {
     return 'You are registered✅';
   }
 
-  async login(loginDto: { username: string; password: string }) {
+  async login(loginDto: { username: string; password: string }, res: Response) {
     const user = await this.userRepository.findOneBy({
       username: loginDto.username,
     });
@@ -54,9 +56,17 @@ export class AuthService {
 
     const payload = { id: user.id, username: user.username, role: user.role };
     const accessToken = this.jwtService.sign(payload, { expiresIn: '1d' });
+    const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
+
+    // Cookie ni yaratish va javobga qo'shish
+    res.cookie('refresh_token', refreshToken, {
+      httpOnly: true, // Xavfsizlik uchun
+      secure: process.env.NODE_ENV === 'production', // HTTPS da ishlashini ta'minlash
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 kun
+    });
 
     const { password, ...userData } = user;
-    return { userData, access_token: accessToken};
+    return res.json({ userData, access_token: accessToken });
   }
 
   logout(): { message: string } {
