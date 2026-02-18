@@ -8,7 +8,7 @@ export class ResultsController {
 
   @UseGuards(AuthGuard)
   @Get('user/:userId')
-  async findAllByUser(@Param('userId') userId: number) {
+  async findAllByUser(@Param('userId') userId: string) {
     return await this.resultsService.findAllByUser(userId);
   }
 }

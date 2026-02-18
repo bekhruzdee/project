@@ -16,7 +16,7 @@ export class EnrollmentService {
     private readonly courseRepository: Repository<Course>,
   ) {}
 
-  async enrollUser(userId: number, courseId: number): Promise<Enrollment> {
+  async enrollUser(userId: string, courseId: number): Promise<Enrollment> {
     const [userExists, courseExists] = await Promise.all([
       this.usersRepository.findOne({ where: { id: userId } }),
       this.courseRepository.findOne({ where: { id: courseId } }),
@@ -39,7 +39,7 @@ export class EnrollmentService {
     return this.enrollmentRepository.save(enrollment);
   }
 
-  async getEnrollmentsByUserId(userId: number): Promise<Enrollment[]> {
+  async getEnrollmentsByUserId(userId: string): Promise<Enrollment[]> {
     const enrollments = await this.enrollmentRepository.find({
       where: { user: { id: userId } },
       relations: ['course'],
