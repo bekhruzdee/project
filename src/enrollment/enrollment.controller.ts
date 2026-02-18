@@ -11,7 +11,7 @@ export class EnrollmentController {
   @UseGuards(AuthGuard)
   @Post()
   async enrollUser(
-    @Body() body: { userId: number; courseId: number },
+    @Body() body: { userId: string; courseId: number },
   ): Promise<Enrollment> {
     const { userId, courseId } = body;
     return this.enrollmentService.enrollUser(userId, courseId);
@@ -20,7 +20,7 @@ export class EnrollmentController {
   @UseGuards(AuthGuard)
   @Get(':userId')
   async getUserEnrollments(
-    @Param('userId') userId: number,
+    @Param('userId') userId: string,
   ): Promise<Enrollment[]> {
     return this.enrollmentService.getEnrollmentsByUserId(userId);
   }

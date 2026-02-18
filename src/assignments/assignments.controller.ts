@@ -39,7 +39,7 @@ export class AssignmentsController {
   @Patch(':id/grade')
   async gradeAssignment(
     @Param('id') assignmentId: number,
-    @Body('userId') userId: number,
+    @Body('userId') userId: string,
     @Body('grade') grade: number,
   ) {
     return await this.assignmentsService.gradeAssignment(

@@ -10,7 +10,7 @@ export class ResultsService {
     private readonly resultRepository: Repository<Result>,
   ) {}
 
-  async findAllByUser(userId: number): Promise<Result[]> {
+  async findAllByUser(userId: string): Promise<Result[]> {
     const results = await this.resultRepository.find({
       where: { user: { id: userId } },
       relations: ['assignment', 'user'],

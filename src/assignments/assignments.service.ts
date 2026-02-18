@@ -58,7 +58,7 @@ export class AssignmentsService {
 
   async gradeAssignment(
     assignmentId: number,
-    userId: number,
+    userId: string,
     grade: number,
   ): Promise<Result> {
     const assignment = await this.findOne(assignmentId);
@@ -69,7 +69,7 @@ export class AssignmentsService {
     }
 
     const result = this.resultRepository.create({
-      userId,
+      user: { id: userId },
       assignment,
       grade,
     });
